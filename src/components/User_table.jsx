@@ -2,42 +2,34 @@ import React, { useContext, useState } from "react";
 import { Table } from "reactstrap";
 import User_TableRow from "./User_TableRow";
 import { UserContext } from "../context/UserContext";
-import { deleteUser } from "../api/userApi";
 
-const User_table = () => {
-  const { users, setUsers } = useContext(UserContext);
-  const [openUserId, setOpenUserId] = useState(null);
+const User_table = ({ setOpenUserId }) => {
+  const { users, setUsers, deleteUser } = useContext(UserContext);
 
   const handleEditClick = (userId) => {
-    setOpenUserId(openUserId === userId ? null : userId);
+    setOpenUserId(userId);
   };
   const handleDelete = async (userId) => {
     try {
       await deleteUser(userId);
 
-      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+      alert("user deleted successfully");
     } catch (error) {
       console.error(error);
       alert("Failed to delete User");
     }
   };
 
-  const handleUserUpdated = (updatedUser) => {
-    setUsers((prevUsers) =>
-      prevUsers.map((user) => (user.id === updatedUser.id ? updatedUser : user))
-    );
-  };
-
   return (
     <div>
-      <Table dark hover responsive striped>
+      <Table hover responsive striped>
         <thead>
           <tr className="fw-bolder">
             <th>S.NO</th>
             <th>First Name</th>
             <th>Last Name</th>
             <th>Email</th>
-            <th>Department</th>
+            <th>Company</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -54,9 +46,7 @@ const User_table = () => {
                 key={user.id}
                 user={user}
                 index={index + 1}
-                isSidebarOpen={openUserId === user.id}
                 onEditClick={() => handleEditClick(user.id)}
-                onUserUpdated={handleUserUpdated}
                 onDeleteClick={() => handleDelete(user.id)}
               />
             ))

@@ -28,6 +28,7 @@ export const UserProvider = ({ children }) => {
     try {
       const response = await axios.post(USER_URL, user);
       setUsers((prevUsers) => [...prevUsers, response.data]);
+      alert("user added successfully");
     } catch (err) {
       setError("Failed to add user");
     }
