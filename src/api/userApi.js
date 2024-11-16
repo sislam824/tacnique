@@ -23,6 +23,7 @@ export const addUser = async (user) => {
 export const editUser = async (id, updatedUser) => {
   try {
     const response = await axios.put(`${USER_URL}/${id}`, updatedUser);
+    console.log(response.data);
     return response.data;
   } catch (error) {
     throw new Error("Failed to edit user");

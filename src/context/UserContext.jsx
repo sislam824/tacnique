@@ -1,13 +1,7 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useCallback,
-} from "react";
+import React, { createContext, useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
-const BASE_URL = "https://jsonplaceholder.typicode.com/users";
+const USER_URL = "https://jsonplaceholder.typicode.com/users";
 
 export const UserContext = createContext();
 
@@ -20,7 +14,7 @@ export const UserProvider = ({ children }) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(BASE_URL);
+      const response = await axios.get(USER_URL);
       setUsers(response.data);
     } catch (err) {
       setError("Failed to fetch users");
@@ -32,7 +26,7 @@ export const UserProvider = ({ children }) => {
 
   const addUser = async (user) => {
     try {
-      const response = await axios.post(BASE_URL, user);
+      const response = await axios.post(USER_URL, user);
       setUsers((prevUsers) => [...prevUsers, response.data]);
     } catch (err) {
       setError("Failed to add user");
@@ -41,7 +35,7 @@ export const UserProvider = ({ children }) => {
 
   const editUser = async (id, updatedUser) => {
     try {
-      const response = await axios.put(`${BASE_URL}/${id}`, updatedUser);
+      const response = await axios.put(`${USER_URL}/${id}`, updatedUser);
       setUsers((prevUsers) =>
         prevUsers.map((user) => (user.id === id ? response.data : user))
       );
@@ -52,7 +46,7 @@ export const UserProvider = ({ children }) => {
 
   const deleteUser = async (id) => {
     try {
-      await axios.delete(`${BASE_URL}/${id}`);
+      await axios.delete(`${USER_URL}/${id}`);
       setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
     } catch (err) {
       setError("Failed to delete user");
@@ -65,7 +59,16 @@ export const UserProvider = ({ children }) => {
 
   return (
     <UserContext.Provider
-      value={{ users, loading, error, getUsers, addUser, editUser, deleteUser }}
+      value={{
+        users,
+        loading,
+        error,
+        getUsers,
+        addUser,
+        editUser,
+        deleteUser,
+        setUsers,
+      }}
     >
       {children}
     </UserContext.Provider>
